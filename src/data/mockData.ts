@@ -1,0 +1,203 @@
+import { PDFDocument, TeamMember, BrandingSettings } from '../types';
+
+export const defaultBranding: BrandingSettings = {
+  companyName: 'Acme Corp',
+  primaryColor: '#2563eb', // Tailwind blue-600
+  accentColor: '#10b981', // Tailwind emerald-500
+  emailFooter: '© 2026 Acme Corp. Securely signed with SignFlow.',
+  showPoweredBy: true,
+};
+
+export const mockTeam: TeamMember[] = [
+  { id: 't1', name: 'Sarah Connor', email: 'sarah@acme.com', role: 'admin', avatar: 'SC' },
+  { id: 't2', name: 'John Doe', email: 'john@acme.com', role: 'editor', avatar: 'JD' },
+  { id: 't3', name: 'Alice Smith', email: 'alice@acme.com', role: 'viewer', avatar: 'AS' },
+];
+
+export const createSamplePages = (title: string, count: number) => {
+  return Array.from({ length: count }, (_, i) => ({
+    id: `page-${title}-${i + 1}`,
+    pageNumber: i + 1,
+    rotation: 0,
+  }));
+};
+
+export const mockDocuments: PDFDocument[] = [
+  {
+    id: 'doc-lease-agreement',
+    title: 'Residential Lease Agreement.pdf',
+    status: 'completed',
+    createdAt: '2026-06-10 10:00',
+    updatedAt: '2026-06-11 14:22',
+    creator: 'Sarah Connor',
+    folder: 'signed',
+    pages: createSamplePages('lease', 3),
+    fields: [
+      {
+        id: 'f1',
+        type: 'text',
+        page: 1,
+        x: 15,
+        y: 40,
+        width: 70,
+        height: 6,
+        label: 'Tenant Full Name',
+        required: true,
+        role: 'Tenant',
+        value: 'David Miller',
+      },
+      {
+        id: 'f2',
+        type: 'text',
+        page: 1,
+        x: 15,
+        y: 50,
+        width: 70,
+        height: 6,
+        label: 'Property Address',
+        required: true,
+        role: 'Landlord',
+        value: '123 Pinecrest Ave, Seattle, WA',
+      },
+      {
+        id: 'f3',
+        type: 'signature',
+        page: 3,
+        x: 15,
+        y: 75,
+        width: 30,
+        height: 10,
+        label: 'Tenant Signature',
+        required: true,
+        role: 'Tenant',
+        value: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50"><path d="M 10 40 Q 30 10 50 40 T 90 20" fill="none" stroke="%232563eb" stroke-width="3"/></svg>',
+      },
+      {
+        id: 'f4',
+        type: 'signature',
+        page: 3,
+        x: 55,
+        y: 75,
+        width: 30,
+        height: 10,
+        label: 'Landlord Signature',
+        required: true,
+        role: 'Landlord',
+        value: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50"><path d="M 15 20 Q 40 30 50 15 T 85 45" fill="none" stroke="%232563eb" stroke-width="3"/></svg>',
+      },
+    ],
+    drawings: [],
+    recipients: [
+      {
+        id: 'r1',
+        name: 'David Miller',
+        email: 'david.m@example.com',
+        role: 'Tenant',
+        order: 1,
+        status: 'signed',
+        verificationType: 'passcode',
+        verificationCode: '1234',
+        signedAt: '2026-06-11 11:15',
+      },
+      {
+        id: 'r2',
+        name: 'Sarah Connor',
+        email: 'sarah@acme.com',
+        role: 'Landlord',
+        order: 2,
+        status: 'signed',
+        verificationType: 'none',
+        signedAt: '2026-06-11 14:22',
+      },
+    ],
+    auditLogs: [
+      { id: 'a1', timestamp: '2026-06-10 10:00', action: 'Document Created', user: 'Sarah Connor', ipAddress: '192.168.1.10', details: 'Lease Agreement uploaded as draft.' },
+      { id: 'a2', timestamp: '2026-06-10 10:15', action: 'Sent for Signing', user: 'Sarah Connor', ipAddress: '192.168.1.10', details: 'Sent to Tenant (David Miller) and Landlord (Sarah Connor).' },
+      { id: 'a3', timestamp: '2026-06-11 11:10', action: 'Identity Verified', user: 'David Miller', ipAddress: '172.56.21.8', details: 'Verified via secure access passcode.' },
+      { id: 'a4', timestamp: '2026-06-11 11:15', action: 'Document Signed', user: 'David Miller', ipAddress: '172.56.21.8', details: 'Tenant Signature & name fields completed.' },
+      { id: 'a5', timestamp: '2026-06-11 14:22', action: 'Document Signed', user: 'Sarah Connor', ipAddress: '192.168.1.10', details: 'Landlord Signature completed. Document fully executed.' },
+    ],
+  },
+  {
+    id: 'doc-nda',
+    title: 'Mutual Non-Disclosure Agreement.pdf',
+    status: 'waiting',
+    createdAt: '2026-06-15 08:30',
+    updatedAt: '2026-06-15 08:45',
+    creator: 'John Doe',
+    folder: 'sent',
+    pages: createSamplePages('nda', 2),
+    fields: [
+      { id: 'n1', type: 'text', page: 1, x: 20, y: 35, width: 60, height: 5, label: 'Disclosing Party', required: true, role: 'Disclosing Party', value: 'Acme Corp' },
+      { id: 'n2', type: 'text', page: 1, x: 20, y: 45, width: 60, height: 5, label: 'Receiving Party', required: true, role: 'Receiving Party' },
+      { id: 'n3', type: 'signature', page: 2, x: 15, y: 60, width: 30, height: 10, label: 'Disclosing Signature', required: true, role: 'Disclosing Party' },
+      { id: 'n4', type: 'signature', page: 2, x: 55, y: 60, width: 30, height: 10, label: 'Receiving Signature', required: true, role: 'Receiving Party' },
+      { id: 'n5', type: 'attachment', page: 2, x: 55, y: 75, width: 30, height: 8, label: 'Upload Business License', required: true, role: 'Receiving Party' },
+    ],
+    drawings: [],
+    recipients: [
+      { id: 'ndr1', name: 'John Doe', email: 'john@acme.com', role: 'Disclosing Party', order: 1, status: 'signed', verificationType: 'none', signedAt: '2026-06-15 08:45' },
+      { id: 'ndr2', name: 'TechCorp CEO', email: 'ceo@techcorp.com', role: 'Receiving Party', order: 2, status: 'pending', verificationType: 'sms', verificationCode: '9823' },
+    ],
+    auditLogs: [
+      { id: 'nda-l1', timestamp: '2026-06-15 08:30', action: 'Document Created', user: 'John Doe', ipAddress: '192.168.1.15', details: 'NDA template selected.' },
+      { id: 'nda-l2', timestamp: '2026-06-15 08:45', action: 'Document Signed', user: 'John Doe', ipAddress: '192.168.1.15', details: 'Disclosing party signed.' },
+      { id: 'nda-l3', timestamp: '2026-06-15 08:46', action: 'SMS Invite Sent', user: 'SignFlow System', ipAddress: '0.0.0.0', details: 'SMS Invite sent to TechCorp CEO (ceo@techcorp.com) for secure signing.' },
+    ],
+  },
+  {
+    id: 'doc-template-w9',
+    title: 'W-9 Form (2026 Draft)',
+    status: 'template',
+    createdAt: '2026-05-20 12:00',
+    updatedAt: '2026-06-12 16:30',
+    creator: 'Sarah Connor',
+    folder: 'drafts',
+    isTemplate: true,
+    pages: createSamplePages('w9', 1),
+    fields: [
+      { id: 'w1', type: 'text', page: 1, x: 10, y: 15, width: 40, height: 5, label: 'Name on tax return', required: true, role: 'Contractor' },
+      { id: 'w2', type: 'text', page: 1, x: 55, y: 15, width: 35, height: 5, label: 'Business name', required: false, role: 'Contractor' },
+      { id: 'w3', type: 'dropdown', page: 1, x: 10, y: 25, width: 80, height: 5, label: 'Tax classification', required: true, role: 'Contractor', options: ['Individual/Sole Proprietor', 'C Corporation', 'S Corporation', 'Partnership', 'LLC'] },
+      { id: 'w4', type: 'text', page: 1, x: 10, y: 35, width: 80, height: 5, label: 'Address (number, street, and apt)', required: true, role: 'Contractor' },
+      { id: 'w5', type: 'text', page: 1, x: 10, y: 45, width: 40, height: 5, label: 'Social Security Number (SSN)', required: true, role: 'Contractor', placeholder: 'XXX-XX-XXXX' },
+      { id: 'w6', type: 'text', page: 1, x: 55, y: 45, width: 35, height: 5, label: 'Employer Identification Number (EIN)', required: false, role: 'Contractor' },
+      { id: 'w7', type: 'signature', page: 1, x: 10, y: 65, width: 45, height: 10, label: 'Contractor Signature', required: true, role: 'Contractor' },
+      { id: 'w8', type: 'date', page: 1, x: 60, y: 65, width: 30, height: 10, label: 'Date', required: true, role: 'Contractor' },
+    ],
+    drawings: [],
+    recipients: [
+      { id: 'wr1', name: 'Placeholder Contractor', email: '', role: 'Contractor', order: 1, status: 'pending', verificationType: 'none' },
+    ],
+    auditLogs: [
+      { id: 'wl1', timestamp: '2026-05-20 12:00', action: 'Template Saved', user: 'Sarah Connor', ipAddress: '192.168.1.10', details: 'W-9 Form structural template created.' },
+    ],
+  },
+  {
+    id: 'doc-powerform-waiver',
+    title: 'Acme Gym Membership & Liability Waiver',
+    status: 'powerform',
+    createdAt: '2026-06-01 09:00',
+    updatedAt: '2026-06-16 11:00',
+    creator: 'Sarah Connor',
+    folder: 'drafts',
+    isPowerForm: true,
+    redirectUrl: 'https://acmegym.com/welcome',
+    pages: createSamplePages('waiver', 1),
+    fields: [
+      { id: 'p1', type: 'text', page: 1, x: 10, y: 25, width: 80, height: 5, label: 'Full Name', required: true, role: 'Member' },
+      { id: 'p2', type: 'text', page: 1, x: 10, y: 35, width: 40, height: 5, label: 'Emergency Contact Name', required: true, role: 'Member' },
+      { id: 'p3', type: 'text', page: 1, x: 55, y: 35, width: 35, height: 5, label: 'Emergency Contact Phone', required: true, role: 'Member' },
+      { id: 'p4', type: 'checkbox', page: 1, x: 10, y: 48, width: 5, height: 4, label: 'I accept all safety guidelines and waivers', required: true, role: 'Member' },
+      { id: 'p5', type: 'signature', page: 1, x: 10, y: 60, width: 45, height: 10, label: 'Member Signature', required: true, role: 'Member' },
+      { id: 'p6', type: 'payment', page: 1, x: 60, y: 60, width: 30, height: 10, label: 'Pay $25 Registration Fee', required: true, role: 'Member', paymentAmount: 25.00 },
+    ],
+    drawings: [],
+    recipients: [
+      { id: 'pr1', name: 'Public Member', email: '', role: 'Member', order: 1, status: 'pending', verificationType: 'none' },
+    ],
+    auditLogs: [
+      { id: 'pl1', timestamp: '2026-06-01 09:00', action: 'PowerForm Created', user: 'Sarah Connor', ipAddress: '192.168.1.10', details: 'Liability Waiver published as self-service PowerForm.' },
+    ],
+  },
+];
